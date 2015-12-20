@@ -1,0 +1,8 @@
+package ${package}.dao;
+
+
+import ${package}.contract.entity.${entity};
+
+public class ${entity}Dao extends SpBaseDao<${entity}>{
+
+}

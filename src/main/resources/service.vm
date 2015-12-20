@@ -1,0 +1,57 @@
+package ${package}.service;
+
+import com.bj58.spat.scf.server.contract.annotation.ServiceBehavior;
+
+import ${package}.contract.entity.${entity};
+import ${package}.contract.service.I${entity}DasService;
+import ${package}.dao.${entity}Dao;
+import com.bj58.supin.das.kefudb.utils.IdUtil;
+
+import java.util.Date;
+import java.util.List;
+
+
+@ServiceBehavior
+public class ${entity}DasService implements I${entity}DasService {
+
+    private ${entity}Dao dao = new ${entity}Dao();
+
+    @Override
+    public ${entity} loadById(long id) throws Exception {
+        return dao.loadById(id);
+    }
+
+    @Override
+    public long insert(${entity} entity) throws Exception {
+        entity.setId(IdUtil.getID());
+        return dao.insert(entity);
+    }
+
+    @Override
+    public void update(${entity} entity) throws Exception {
+        dao.update(entity);
+    }
+
+    @Override
+    public List<${entity}> pageByRowNumber(int pagesize, int currentpage, String where, String orderby) throws Exception {
+        return dao.pageByRowNumber(pagesize, currentpage, where, orderby);
+    }
+
+    @Override
+    public int countByWhere(String where) throws Exception {
+    return dao.countByWhere(where);
+    }
+
+    @Override
+    public List<${entity}> getListByCustom(String columns, String condition, String orderBy) throws Exception {
+        return dao.getListByCustom(columns, condition, orderBy);
+    }
+
+    @Override
+    public void updateByCustom(String columns, String condition) throws Exception {
+        dao.updateByCustom(columns, condition);
+    }
+
+
+
+}

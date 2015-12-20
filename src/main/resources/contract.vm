@@ -1,0 +1,33 @@
+package ${package}.contract.service;
+
+import com.bj58.spat.scf.server.contract.annotation.OperationContract;
+import com.bj58.spat.scf.server.contract.annotation.ServiceContract;
+import ${package}.contract.entity.${entity};
+
+import java.util.List;
+
+@ServiceContract
+public interface I${entity}DasService{
+
+    @OperationContract
+    public ${entity} loadById(long id) throws Exception;
+
+    @OperationContract
+    public long insert(${entity} entity) throws Exception;
+
+    @OperationContract
+    public void update(${entity} entity) throws Exception;
+
+    @OperationContract
+    public List<${entity}> pageByRowNumber(int pagesize, int currentpage, String where, String orderby)throws Exception;
+
+    @OperationContract
+    public int countByWhere(String where) throws Exception;
+
+    @OperationContract
+    public List<${entity}> getListByCustom(String columns, String condition, String orderBy) throws Exception;
+
+    @OperationContract
+    public void updateByCustom(String columns, String condition) throws Exception;
+
+}
