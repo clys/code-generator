@@ -2,7 +2,6 @@ package com.bj58.supin.plugins.codegenerator.core.main;
 
 
 import com.bj58.supin.plugins.codegenerator.core.ConfigContext;
-import com.bj58.supin.plugins.codegenerator.core.Constant;
 import com.bj58.supin.plugins.codegenerator.core.entity.ColumnDefinition;
 import com.bj58.supin.plugins.codegenerator.core.helper.ColumnHelper;
 import com.bj58.supin.plugins.codegenerator.core.helper.DBHelper;
@@ -11,12 +10,9 @@ import com.bj58.supin.plugins.codegenerator.core.util.ClassUtil;
 import com.bj58.supin.plugins.codegenerator.core.util.FileUtil;
 import com.bj58.supin.plugins.codegenerator.core.util.VelocityUtil;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-import org.apache.velocity.app.VelocityEngine;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 
 public class CodeGenerator{
@@ -53,16 +49,16 @@ public class CodeGenerator{
         //得到数据库表的元数据
         List<Map<String, Object>> resultList = dbHelper.descTable();
 
-        //转换为velocity数据
+        //元数据处理
         List<ColumnDefinition> columnDefinitionList = ColumnHelper.covertColumnDefinition(resultList);
 
         //生成代码
         EntityService.doGenerator(configContext, columnDefinitionList, new Callback() {
             public void write(ConfigContext configContext, VelocityContext context) {
 
-                FileUtil.writeFile(configContext.getOutputPath(),
-                        String.format("%s.java",configContext.getTargetName()),
-                        VelocityUtil.render("entity.vm", context));
+                FileUtil.writeFile(configContext.getOutputPath(),                   //输出目录
+                        String.format("%s.java",configContext.getTargetName()),    //文件名
+                        VelocityUtil.render("entity.vm", context));                 //模板生成内容
 
                 FileUtil.writeFile(configContext.getOutputPath(),
                         String.format("I%sDasService.java",configContext.getTargetName()),

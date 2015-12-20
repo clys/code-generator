@@ -1,6 +1,5 @@
 package com.bj58.supin.plugins.codegenerator.core;
 
-import com.bj58.supin.plugins.codegenerator.core.Constant;
 import com.bj58.supin.plugins.codegenerator.core.util.PropsUtil;
 
 import java.util.Properties;

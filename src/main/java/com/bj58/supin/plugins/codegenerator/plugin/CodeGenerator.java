@@ -85,7 +85,7 @@ public class CodeGenerator extends AbstractMojo {
         //得到数据库表的元数据
         List<Map<String,Object>>  resultList= dbHelper.descTable();
 
-        //转换为velocity数据
+        //元数据处理
         List<ColumnDefinition> columnDefinitionList = ColumnHelper.covertColumnDefinition(resultList);
 
 
@@ -93,7 +93,7 @@ public class CodeGenerator extends AbstractMojo {
             public void write(ConfigContext configContext, VelocityContext context) {
 
                 FileUtil.writeFile(configContext.getOutputPath(),                   //输出目录
-                        String.format("%s.java", configContext.getTargetName()),    //文件名
+                        String.format("%s.java",configContext.getTargetName()),    //文件名
                         VelocityUtil.render("entity.vm", context));                 //模板生成内容
 
                 FileUtil.writeFile(configContext.getOutputPath(),

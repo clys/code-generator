@@ -1,8 +1,6 @@
 package com.bj58.supin.plugins.codegenerator.core.service;
 
 import com.bj58.supin.plugins.codegenerator.core.ConfigContext;
-import com.bj58.supin.plugins.codegenerator.core.util.FileUtil;
-import com.bj58.supin.plugins.codegenerator.core.util.VelocityUtil;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
