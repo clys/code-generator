@@ -16,22 +16,11 @@ package com.bj58.supin.plugins.codegenerator.plugin;
  * limitations under the License.
  */
 
-import com.bj58.supin.plugins.codegenerator.core.entity.ColumnDefinition;
-import com.bj58.supin.plugins.codegenerator.core.helper.ColumnHelper;
-import com.bj58.supin.plugins.codegenerator.core.ConfigContext;
-import com.bj58.supin.plugins.codegenerator.core.helper.DBHelper;
-import com.bj58.supin.plugins.codegenerator.core.service.Callback;
-import com.bj58.supin.plugins.codegenerator.core.service.EntityService;
-import com.bj58.supin.plugins.codegenerator.core.util.FileUtil;
-import com.bj58.supin.plugins.codegenerator.core.util.VelocityUtil;
+import com.clys.codeGenerator.service.CodeGeneratorService;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.velocity.VelocityContext;
 
-
-import java.io.*;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
 
 
 /**
@@ -76,39 +65,12 @@ public class CodeGenerator extends AbstractMojo {
 
     public void execute() throws MojoExecutionException {
 
-        //得到配置文件对象
-        ConfigContext configContext = new ConfigContext(getSourcePath(),getOutputPath());
-
-        //初始化DB工具类
-        DBHelper dbHelper = new DBHelper(configContext);
-
-        //得到数据库表的元数据
-        List<Map<String,Object>>  resultList= dbHelper.descTable();
-
-        //元数据处理
-        List<ColumnDefinition> columnDefinitionList = ColumnHelper.covertColumnDefinition(resultList);
-
-
-        EntityService.doGenerator(configContext, columnDefinitionList, new Callback() {
-            public void write(ConfigContext configContext, VelocityContext context) {
-
-                FileUtil.writeFile(configContext.getOutputPath(),                   //输出目录
-                        String.format("%s.java",configContext.getTargetName()),    //文件名
-                        VelocityUtil.render("entity.vm", context));                 //模板生成内容
-
-                FileUtil.writeFile(configContext.getOutputPath(),
-                        String.format("I%sDasService.java", configContext.getTargetName()),
-                        VelocityUtil.render("contract.vm", context));
-
-                FileUtil.writeFile(configContext.getOutputPath(),
-                        String.format("%sDao.java", configContext.getTargetName()),
-                        VelocityUtil.render("dao.vm", context));
-
-                FileUtil.writeFile(configContext.getOutputPath(),
-                        String.format("%sDasService.java", configContext.getTargetName()),
-                        VelocityUtil.render("service.vm", context));
-            }
-        });
+        CodeGeneratorService codeGeneratorService = new CodeGeneratorService();
+        try {
+            codeGeneratorService.dbToCode(getSourcePath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 }

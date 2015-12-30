@@ -1,6 +1,7 @@
 package com.clys.codeGenerator.entity;
 
 import com.clys.codeGenerator.utils.Dom4jUtils;
+import com.clys.codeGenerator.utils.PathUtil;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -10,10 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>名称: </p>
- * <p>描述: 本类描述</p>
- * <p>内容摘要: // 简要描述本文件的内容，包括主要模块、函数及其功能的说明</p>
- * <p>其他说明: // 其它内容的说明</p>
+ * <p>名称: 插件配置</p>
  * <p>创建日期：15-12-28</p>
  *
  * @author 陈李雨声
@@ -24,19 +22,64 @@ public class ConfigContext {
         SAXReader reader = new SAXReader();
         File file = new File(sourcePath + "codeGeneratorContext.xml");
         Document document = reader.read(file);
-        Element root = document.getRootElement(),aBean;
+        Element root = document.getRootElement(), aBean;
         List<Element> childElements = root.elements("bean");
         Map<String, Element> beanMap = Dom4jUtils.elementListToMap(childElements, "id");
 
         this.setJdbc(new Jdbc());
         aBean = beanMap.get("jdbc");
-        if(aBean != null){
+        if (aBean != null) {
             Dom4jUtils.extractProperty(this.getJdbc(), aBean.elements("property"));
+        }
+
+        this.setPath(new Path(sourcePath));
+        aBean = beanMap.get("path");
+        if (aBean != null) {
+            Dom4jUtils.extractProperty(this.getPath(), aBean.elements("property"));
+        }
+
+        this.setTarget(new Target());
+        aBean = beanMap.get("target");
+        if (aBean != null) {
+            Dom4jUtils.extractProperty(this.getTarget(), aBean.elements("property"));
+        }
+
+        this.setVm(new Vm());
+        aBean = beanMap.get("vm");
+        if (aBean != null) {
+            Dom4jUtils.extractProperty(this.getVm(), aBean.elements("property"));
         }
 
     }
 
     private Jdbc jdbc;
+    private Path path;
+    private Target target;
+    private Vm vm;
+
+    public Vm getVm() {
+        return vm;
+    }
+
+    public void setVm(Vm vm) {
+        this.vm = vm;
+    }
+
+    public Target getTarget() {
+        return target;
+    }
+
+    public void setTarget(Target target) {
+        this.target = target;
+    }
+
+    public Path getPath() {
+        return path;
+    }
+
+    public void setPath(Path path) {
+        this.path = path;
+    }
 
     public Jdbc getJdbc() {
         return jdbc;
@@ -49,26 +92,8 @@ public class ConfigContext {
     public class Jdbc {
         private String driver;
         private String url;
-        private String username;
+        private String userName;
         private String password;
-        private List<String> l;
-        private Map<String,String> m;
-
-        public List<String> getL() {
-            return l;
-        }
-
-        public void setL(List<String> l) {
-            this.l = l;
-        }
-
-        public Map<String, String> getM() {
-            return m;
-        }
-
-        public void setM(Map<String, String> m) {
-            this.m = m;
-        }
 
         public String getDriver() {
             return driver;
@@ -86,12 +111,12 @@ public class ConfigContext {
             this.url = url;
         }
 
-        public String getUsername() {
-            return username;
+        public String getUserName() {
+            return userName;
         }
 
-        public void setUsername(String username) {
-            this.username = username;
+        public void setUserName(String username) {
+            this.userName = username;
         }
 
         public String getPassword() {
@@ -100,6 +125,64 @@ public class ConfigContext {
 
         public void setPassword(String password) {
             this.password = password;
+        }
+    }
+
+    public class Path {
+        public Path(String source) {
+            this.source = source;
+        }
+
+        private String source;
+        private String output;
+
+        public String getSource() {
+            return source;
+        }
+
+        public void setSource(String source) {
+            this.source = source;
+        }
+
+        public String getOutput() {
+            return output;
+        }
+
+        public void setOutput(String output) {
+            this.output = PathUtil.handle(this.getSource(),output);
+        }
+    }
+
+    public class Target{
+        private String pack;
+        private Map<String,String> dbToCode;
+
+        public String getPackage() {
+            return pack;
+        }
+
+        public void setPackage(String pack) {
+            this.pack = pack;
+        }
+
+        public Map<String, String> getDbToCode() {
+            return dbToCode;
+        }
+
+        public void setDbToCode(Map<String, String> dbToCode) {
+            this.dbToCode = dbToCode;
+        }
+    }
+
+    public class Vm{
+        private Map<String,String> elements;
+
+        public Map<String, String> getElements() {
+            return elements;
+        }
+
+        public void setElements(Map<String, String> elements) {
+            this.elements = elements;
         }
     }
 }
