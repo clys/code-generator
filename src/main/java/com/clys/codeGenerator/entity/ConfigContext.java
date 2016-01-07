@@ -1,13 +1,12 @@
 package com.clys.codeGenerator.entity;
 
-import com.clys.codeGenerator.utils.Dom4jUtils;
 import com.clys.codeGenerator.utils.PathUtil;
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
-import java.util.List;
+import java.io.FileReader;
 import java.util.Map;
 
 /**
@@ -17,39 +16,22 @@ import java.util.Map;
  * @author 陈李雨声
  * @version 1.0
  */
+@XmlRootElement
 public class ConfigContext {
-    public ConfigContext(String sourcePath) throws Exception {
-        SAXReader reader = new SAXReader();
+    public static ConfigContext newInstance(String sourcePath) throws Exception {
         File file = new File(sourcePath + "codeGeneratorContext.xml");
-        Document document = reader.read(file);
-        Element root = document.getRootElement(), aBean;
-        List<Element> childElements = root.elements("bean");
-        Map<String, Element> beanMap = Dom4jUtils.elementListToMap(childElements, "id");
+        JAXBContext context = JAXBContext.newInstance(ConfigContext.class);
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+        ConfigContext configContext = (ConfigContext) unmarshaller.unmarshal(new FileReader(file));
+        configContext.getPath().setSource(sourcePath);
+        configContext.getPath().setOutput(
+                PathUtil.handle(sourcePath, configContext.getPath().getOutput())
+        );
 
-        this.setJdbc(new Jdbc());
-        aBean = beanMap.get("jdbc");
-        if (aBean != null) {
-            Dom4jUtils.extractProperty(this.getJdbc(), aBean.elements("property"));
-        }
+        return configContext;
+    }
 
-        this.setPath(new Path(sourcePath));
-        aBean = beanMap.get("path");
-        if (aBean != null) {
-            Dom4jUtils.extractProperty(this.getPath(), aBean.elements("property"));
-        }
-
-        this.setTarget(new Target());
-        aBean = beanMap.get("target");
-        if (aBean != null) {
-            Dom4jUtils.extractProperty(this.getTarget(), aBean.elements("property"));
-        }
-
-        this.setVm(new Vm());
-        aBean = beanMap.get("vm");
-        if (aBean != null) {
-            Dom4jUtils.extractProperty(this.getVm(), aBean.elements("property"));
-        }
-
+    public ConfigContext() {
     }
 
     private Jdbc jdbc;
@@ -89,7 +71,10 @@ public class ConfigContext {
         this.jdbc = jdbc;
     }
 
-    public class Jdbc {
+    public static class Jdbc {
+        public Jdbc() {
+        }
+
         private String driver;
         private String url;
         private String userName;
@@ -128,7 +113,10 @@ public class ConfigContext {
         }
     }
 
-    public class Path {
+    public static class Path {
+        public Path() {
+        }
+
         public Path(String source) {
             this.source = source;
         }
@@ -149,13 +137,16 @@ public class ConfigContext {
         }
 
         public void setOutput(String output) {
-            this.output = PathUtil.handle(this.getSource(),output);
+            this.output = output;
         }
     }
 
-    public class Target{
+    public static class Target {
+        public Target() {
+        }
+
         private String pack;
-        private Map<String,String> dbToCode;
+        private Map<String, String> dbToCode;
 
         public String getPackage() {
             return pack;
@@ -174,8 +165,11 @@ public class ConfigContext {
         }
     }
 
-    public class Vm{
-        private Map<String,String> elements;
+    public static class Vm {
+        public Vm() {
+        }
+
+        private Map<String, String> elements;
 
         public Map<String, String> getElements() {
             return elements;

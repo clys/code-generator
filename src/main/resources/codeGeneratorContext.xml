@@ -1,36 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans>
-    <description>代码生成器配置</description>
+<configContext>
 
-    <bean id="jdbc">
-        <property name="driver" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull"/>
-        <property name="userName" value="root"/>
-        <property name="password" value="root"/>
+    <jdbc>
+        <driver>com.mysql.jdbc.Driver</driver>
+        <url>jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull</url>
+        <userName>root</userName>
+        <password>root</password>
+    </jdbc>
 
-    </bean>
 
-    <bean id="path">
-        <property name="output" value="../code"/>
-    </bean>
+    <path>
+        <output>../code</output>
+    </path>
 
-    <bean id="target">
-        <property name="package" value="com.bj58.supin.das.kefudb"/>
-        <property name="dbToCode">
-            <map>
-                <entry key="tl_s_order" value="Order"/>
-                <entry key="tl_s_test" value="Test"/>
-            </map>
-        </property>
-    </bean>
-    <bean id="vm">
-        <property name="elements">
-            <map>
-                <entry key="entity.vm" value="%s.java"/>
-                <entry key="dao.vm" value="%sDao.java"/>
-                <entry key="service.vm" value="%sService.java"/>
-            </map>
-        </property>
-    </bean>
+    <target>
+        <package>com.bj58.supin.das.kefudb</package>
+        <dbToCode>
+            <entry>
+                <key>tl_s_order</key>
+                <value>Order</value>
+            </entry>
+            <entry>
+                <key>tl_s_test</key>
+                <value>Test</value>
+            </entry>
+        </dbToCode>
+    </target>
 
-</beans>
+    <vm>
+        <elements>
+            <entry>
+                <key>entity.vm</key>
+                <value>%s.java</value>
+            </entry>
+            <entry>
+                <key>dao.vm</key>
+                <value>%sDao.java</value>
+            </entry>
+            <entry>
+                <key>service.vm</key>
+                <value>%sService.java</value>
+            </entry>
+        </elements>
+    </vm>
+
+
+</configContext>

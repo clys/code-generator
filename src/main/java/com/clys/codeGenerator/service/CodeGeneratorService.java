@@ -24,7 +24,7 @@ public class CodeGeneratorService {
     public void dbToCode(String sourcePath) throws Exception {
 
         //得到配置文件对象
-        ConfigContext configContext = new ConfigContext(sourcePath);
+        ConfigContext configContext =ConfigContext.newInstance(sourcePath);
 
         //初始化DB工具类
         DBHelper dbHelper = new DBHelper(configContext);

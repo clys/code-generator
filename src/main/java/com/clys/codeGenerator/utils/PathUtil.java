@@ -11,6 +11,9 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class PathUtil {
     public static String handle(String base, String target) {
+        if(StringUtils.isBlank(base)){
+            return target;
+        }
         String path;
         base = base.replaceAll("\\\\", "/");
         target = target.replaceAll("\\\\", "/");
