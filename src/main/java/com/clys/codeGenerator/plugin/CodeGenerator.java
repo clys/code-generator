@@ -1,4 +1,4 @@
-package com.bj58.supin.plugins.codegenerator.plugin;
+package com.clys.codeGenerator.plugin;
 
 /*
  * Copyright 2001-2005 The Apache Software Foundation.
@@ -64,7 +64,6 @@ public class CodeGenerator extends AbstractMojo {
 
 
     public void execute() throws MojoExecutionException {
-
         CodeGeneratorService codeGeneratorService = new CodeGeneratorService();
         try {
             codeGeneratorService.dbToCode(getSourcePath());

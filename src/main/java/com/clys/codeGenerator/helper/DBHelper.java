@@ -21,26 +21,91 @@ public class DBHelper {
     private QueryRunner queryRunner;
     private ConfigContext context;
 
-    private DataSource initDataSource(ConfigContext context){
+    private DataSource initDataSource(ConfigContext context) {
         BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(context.getJdbc().getDriver());
-        dataSource.setUrl(context.getJdbc().getUrl());
+        String driver = context.getJdbc().getDriver(), url = context.getJdbc().getUrl();
+        dataSource.setDriverClassName(driver);
+        dataSource.setUrl(driver.contains("mysql") ? modifyDB(url, "information_schema") : url);
         dataSource.setUsername(context.getJdbc().getUserName());
         dataSource.setPassword(context.getJdbc().getPassword());
         return dataSource;
     }
 
-    public DBHelper(ConfigContext context){
+    private static String modifyDB(String url, String db) {
+        int l, r = url.length(), len = r, ll, rr;
+        if ((l = url.indexOf("//")) == -1) {
+            return url;
+        }
+
+        ll = url.indexOf("/", l + 2);
+
+        rr = url.indexOf("?", l);
+
+        if (rr > -1) {
+            r = rr;
+        }
+
+        l = ll > -1 ? ll : r - 1;
+        if (l > r) {
+            ll = -1;
+            l = r - 1;
+        }
+
+        return url.substring(0, l + 1) + (ll > -1 ? "" : "/") + db + url.substring(r, len);
+    }
+
+    private static String getDB(String url) {
+        int l, r = url.length(), ll, rr;
+        if ((l = url.indexOf("//")) == -1) {
+            return "";
+        }
+
+        if ((ll = url.indexOf("/", l + 2)) == -1) {
+            return "";
+        }
+
+        rr = url.indexOf("?", l);
+
+        if (rr > -1) {
+            r = rr;
+        }
+
+        if (ll > r) {
+            return "";
+        } else {
+            l = ll;
+        }
+
+        return url.substring(l + 1, r);
+    }
+
+    public DBHelper(ConfigContext context) {
         this.context = context;
         dataSource = initDataSource(this.context);
         queryRunner = new QueryRunner(dataSource);
     }
 
-    public List<Map<String, Object>> descTable(String table){
+    public List<Map<String, Object>> descTable(String table) {
 
-        String DESC_TABLE = String.format("desc %s",table);
+        List<Map<String, Object>> result;
 
-        return queryMapList(DESC_TABLE,null);
+        if (context.getJdbc().getDriver().contains("mysql")) {
+            result = queryMapList(
+                    String.format("select * from columns where table_schema = '%s' and table_name='%s'", getDB(context.getJdbc().getUrl()), table)
+                    , null);
+            for (Map<String, Object> row : result) {
+                row.put("FIELD", row.get("COLUMN_NAME"));
+                row.put("KEY", row.get("COLUMN_KEY"));
+                row.put("TYPE", row.get("DATA_TYPE"));
+
+            }
+        } else {
+            result = queryMapList(
+                    String.format("desc %s", table)
+                    , null);
+        }
+
+        return result;
     }
 
     public List<Map<String, Object>> queryMapList(String sql, Object... params) {

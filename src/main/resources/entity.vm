@@ -24,6 +24,9 @@ public class ${entity}{
 
 #foreach($column in $columns)
     @SCFMember
+#if($column.original.COLUMN_COMMENT && $column.original.COLUMN_COMMENT != "")
+    //${column.original.COLUMN_COMMENT}
+#end
 #if(${column.isPk})
 #if(!${column.isIdentityPk})
     @Id(insertable=true)

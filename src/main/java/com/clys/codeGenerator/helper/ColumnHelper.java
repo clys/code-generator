@@ -1,6 +1,6 @@
 package com.clys.codeGenerator.helper;
 
-import com.bj58.supin.plugins.codegenerator.core.entity.ColumnDefinition;
+import com.clys.codeGenerator.entity.ColumnDefinition;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
@@ -44,6 +44,7 @@ public class ColumnHelper {
 		String type = buildType((String)rowMap.get("TYPE"));
 		columnDefinition.setType(type);
 
+		columnDefinition.setOriginal(rowMap);
 		return columnDefinition;
 	}
 

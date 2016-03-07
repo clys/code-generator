@@ -1,6 +1,6 @@
 package com.clys.codeGenerator.utils;
 
-import com.bj58.supin.plugins.codegenerator.core.entity.ColumnDefinition;
+import com.clys.codeGenerator.entity.ColumnDefinition;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;

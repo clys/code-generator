@@ -1,6 +1,6 @@
 package com.clys.codeGenerator.service;
 
-import com.bj58.supin.plugins.codegenerator.core.entity.ColumnDefinition;
+import com.clys.codeGenerator.entity.ColumnDefinition;
 import com.bj58.supin.plugins.codegenerator.core.util.ClassUtil;
 import com.bj58.supin.plugins.codegenerator.core.util.FileUtil;
 import com.clys.codeGenerator.entity.ConfigContext;

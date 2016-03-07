@@ -1,7 +1,9 @@
-package com.bj58.supin.plugins.codegenerator.core.entity;
+package com.clys.codeGenerator.entity;
 
 import com.bj58.supin.plugins.codegenerator.core.util.SqlTypeUtil;
 import com.bj58.supin.plugins.codegenerator.core.util.StringUtil;
+
+import java.util.Map;
 
 /**
  * 表字段信息
@@ -12,6 +14,7 @@ public class ColumnDefinition {
 	private String type; // 数据库类型
 	private boolean isIdentity; // 是否自增
 	private boolean isPk; // 是否主键
+	private Map<String, Object> original;//原始数据
 
 	/**
 	 * 是否是自增主键
@@ -92,4 +95,11 @@ public class ColumnDefinition {
 		this.isPk = isPk;
 	}
 
+	public Map<String, Object> getOriginal() {
+		return original;
+	}
+
+	public void setOriginal(Map<String, Object> original) {
+		this.original = original;
+	}
 }
